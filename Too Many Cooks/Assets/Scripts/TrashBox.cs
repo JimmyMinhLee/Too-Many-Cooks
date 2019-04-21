@@ -88,6 +88,7 @@ public class TrashBox : MonoBehaviour
                 player.GetComponent<PlayerInteract>().grabbed = false;
             }
             /*TODO: Have a box opening animation and ingredient being thrown away animation?*/
+            FindObjectOfType<AudioManager>().Play("Trash");
         }
     }
 }

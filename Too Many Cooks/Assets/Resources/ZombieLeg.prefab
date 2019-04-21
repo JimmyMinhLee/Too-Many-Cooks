@@ -132,3 +132,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cookTime: 2
+  isCuttable: 0
+  cooked: 0
+  ingredient: ZombieLeg

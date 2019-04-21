@@ -12,6 +12,11 @@ public class PlayerController : MonoBehaviour
     public Vector2 currDirection; // Used for animation
     Animator playerAnim;
 
+    // Is the player sprinting? 
+    public bool isSprinting = false;
+    public float maxSprint = 20f;
+    public float sprintGauge = 20f;
+
     #endregion
 
     void Start()
@@ -25,13 +30,44 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        checkSprint();
+
         // If the WASD or arrow keys are being pressed... 
         if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
         {
-            // Set the animator's IsMoving variable to true 
-            playerAnim.SetBool("IsMoving", true); 
-            // Call PlayerMove - passing in our inputs 
-            PlayerMove(Input.GetAxisRaw("Horizontal") * moveSpeed, Input.GetAxisRaw("Vertical") * moveSpeed);
+            // If the player is sprinting...
+            if (isSprinting)
+
+            {
+                Debug.Log("Sprinting");
+                // Set the animator's IsMoving variable to true 
+                playerAnim.SetBool("IsMoving", true);
+                // Call PlayerMove - passing in our inputs 
+                PlayerMove(Input.GetAxisRaw("Horizontal") * 2 * moveSpeed, Input.GetAxisRaw("Vertical") * 2 * moveSpeed);
+                sprintGauge -= Time.deltaTime * 5f;
+
+                if (sprintGauge < 0f)
+                {
+                    isSprinting = false;
+                }
+            }
+
+            else if (isSprinting == false)
+            {
+                if (!Input.GetKey(KeyCode.LeftShift))
+                {
+                    if (sprintGauge < maxSprint)
+                    {
+                        sprintGauge += Time.deltaTime * 1f;
+                    }
+                }
+
+                // Set the animator's IsMoving variable to true 
+                playerAnim.SetBool("IsMoving", true);
+                // Call PlayerMove - passing in our inputs 
+                PlayerMove(Input.GetAxisRaw("Horizontal") * moveSpeed, Input.GetAxisRaw("Vertical") * moveSpeed);
+
+            }
         }
 
         else
@@ -40,7 +76,13 @@ public class PlayerController : MonoBehaviour
             playerAnim.SetBool("IsMoving", false);
             // Call PlayerMove by passing in 0, 0 - no movement 
             PlayerMove(0, 0);
+            if (sprintGauge < maxSprint)
+            {
+                sprintGauge += Time.deltaTime * 1f;
+            }
+
         }
+
     }
 
     void PlayerMove(float x, float y)
@@ -56,10 +98,26 @@ public class PlayerController : MonoBehaviour
             playerRigidBody.velocity = new Vector2(x, y).normalized;
 
             // Setting the player's current direction 
-            currDirection = new Vector2(x, y); 
+            currDirection = new Vector2(x, y);
         }
 
         // Otherwise, it's going to be just 0, 0
-        playerRigidBody.velocity = new Vector2(x, y); 
+        playerRigidBody.velocity = new Vector2(x, y);
+    }
+
+    void checkSprint()
+    {
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            if (sprintGauge > 1.0f)
+            {
+                isSprinting = true;
+            }
+        }
+
+        else
+        {
+            isSprinting = false;
+        }
     }
 }

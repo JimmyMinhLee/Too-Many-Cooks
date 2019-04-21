@@ -58,9 +58,9 @@ public class CookingStation : MonoBehaviour
                 hasIngredient = true;
                 ingredient = collider.gameObject;
                 ingredientComp = ingredient.GetComponent<Ingredient>();
+                cookTimer += this.ingredientComp.GetCookTime();
                 //Debug.Log("Ingredient entered");
                 break;
-
             default:
                 break;
         }
@@ -73,7 +73,7 @@ public class CookingStation : MonoBehaviour
         {
             //Debug.Log("The player can now cook");
             //Press 'e' to cook the ingredient.
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && !ingredientComp.cooked && cookTimer > 0)
             {
                 Debug.Log("Is cooking");
                 Cook(ingredient);
@@ -110,12 +110,12 @@ public class CookingStation : MonoBehaviour
     //The player cooks. 
     protected void Cook(GameObject ingredient)
     {
+        FindObjectOfType<AudioManager>().Play("Splash");
         //Set isCooking true, add the ingredient to the list, distroy the ingredient object, and transform the station.
         isCooking = true;
         hasIngredient = false;
-        cookTimer += this.ingredientComp.GetCookTime();
 
-        string newStoveName = ingredient.name + "Stove";
+        string newStoveName = ingredientComp.ingredient + "Stove";
         Vector3 position = this.transform.position;
         Quaternion rotation = this.transform.rotation;
 
@@ -126,6 +126,7 @@ public class CookingStation : MonoBehaviour
             GameObject newStoveObj = Instantiate(Resources.Load(newStoveName), position, rotation) as GameObject;
             Stove newStove = newStoveObj.GetComponent<Stove>();
             CopyStove(newStove, this);
+            Debug.Log("Created stove with name: " + newStoveName);
         }
 
         Destroy(this.gameObject);
@@ -144,7 +145,7 @@ public class CookingStation : MonoBehaviour
     private void CopyStove(Stove newStove, CookingStation old)
     {
         newStove.cookTimer = cookTimer;
-        newStove.ingredientName = ingredient.name;
+        newStove.ingredientName = ingredientComp.ingredient;
 
         Debug.Log(newStove.ingredientName);
 

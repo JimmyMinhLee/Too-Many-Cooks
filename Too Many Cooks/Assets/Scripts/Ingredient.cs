@@ -9,16 +9,13 @@ public class Ingredient : MonoBehaviour
     [SerializeField]
     [Tooltip("Assign cook time to the ingredient")]
     private int cookTime;
-    public bool isCuttable; 
+    public bool isCuttable;
+    public bool cooked;
+    public string ingredient;
     #endregion
 
     public float GetCookTime()
     {
         return cookTime;
-    }
-
-    public string GetName()
-    {
-        return gameObject.name;
     }
 }

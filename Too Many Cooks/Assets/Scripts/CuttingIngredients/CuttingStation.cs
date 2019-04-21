@@ -7,6 +7,7 @@ public class CuttingStation : MonoBehaviour
 
     private Transform stationPosition; 
     private bool canCut = false;
+    private bool isCutting = false; 
     public GameObject playerCurrObj;
     public GameObject player;
 
@@ -14,6 +15,9 @@ public class CuttingStation : MonoBehaviour
 
     public float cutTiming;
     public float endAnimationTiming;
+    private float cuttingTime = 100f; 
+    float originalMove;
+
 
     public Animator playerAnim; 
 
@@ -22,14 +26,32 @@ public class CuttingStation : MonoBehaviour
 
     private void Start()
     {
-        stationPosition = GetComponent<Transform>(); 
+        
+        stationPosition = GetComponent<Transform>();
+
     }
 
     void Update()
     {
         if (Input.GetKeyDown("e") && hasPlayer)
         {
+            originalMove = playerMovement.moveSpeed; 
             Interact(); 
+        }
+
+        //if (Input.GetKey("p") && isCutting && cuttingTime > 0f)
+        if (Input.GetKey("j") && isCutting && cuttingTime > 0f)
+        {
+            Debug.Log("In this loop"); 
+            cuttingTime -= 1f;
+            Debug.Log(cuttingTime); 
+        }
+
+        if (cuttingTime <= 0f)
+        {
+            Reset();
+            cuttingTime = 100f;
+            playerMovement.moveSpeed = originalMove;
         }
     }
 
@@ -69,11 +91,14 @@ public class CuttingStation : MonoBehaviour
 
         if (coll.CompareTag("Player"))
         {
+            PlayerInteract playerInteract = coll.GetComponent<PlayerInteract>();
+            coll.GetComponent<Animator>().SetBool("Cutting", false); 
             Debug.Log("The player has just left"); 
             hasPlayer = false; // We don't have a player 
             playerCurrObj = null;
             player = null;
             canCut = false; 
+
         }
     }
 
@@ -81,19 +106,12 @@ public class CuttingStation : MonoBehaviour
     {
        if (canCut)
         {
-            float cutTime = 10f;
-            // Reset the necessary variables in the player i.e. what they're holding 
             PlayerInteract playerScript = player.GetComponent<PlayerInteract>();
-            // Removes the player's current ingredient  
             playerScript.currObj = null;
-            // The player is no longer holding an object
             Destroy(playerCurrObj); 
-            playerCurrObj = null;
-            // The player/station can't cut anything since we just cut an ingredient 
             canCut = false;
+            isCutting = true; 
             playerAnim.SetBool("Cutting", true);
-            StartCoroutine(Cutting());
-            playerAnim.SetBool("Cutting", false);
         }
 
        if (canCut == false)
@@ -102,14 +120,11 @@ public class CuttingStation : MonoBehaviour
         }
     }
 
-    IEnumerator Cutting()
+    private void Reset()
     {
-        float originalMove = playerMovement.moveSpeed;
-        playerMovement.moveSpeed = 0;
-        yield return new WaitForSeconds(2);
-        Debug.Log("Currently cutting!");
-        yield return new WaitForSeconds(endAnimationTiming);
-        Instantiate(cutScript.cuttedIngredient, stationPosition);
-        playerMovement.moveSpeed = originalMove;      
+        canCut = true;
+        isCutting = false;
+        playerAnim.SetBool("Cutting", false);
+        Instantiate(cutScript.cuttedIngredient);
     }
 }

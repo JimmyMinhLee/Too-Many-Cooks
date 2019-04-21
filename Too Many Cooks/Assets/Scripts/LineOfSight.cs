@@ -9,7 +9,6 @@ public class LineOfSight : MonoBehaviour
         // Check if coll is the player
         if (coll.CompareTag("Player")) {
             GetComponentInParent<Zombie>().player = coll.transform;
-
         }
     }
 }

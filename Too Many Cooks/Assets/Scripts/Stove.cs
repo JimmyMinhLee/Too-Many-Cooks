@@ -13,6 +13,7 @@ public class Stove : CookingStation
 
     #region Zombie Variables
     private bool hasZombie = false;
+    private float timeInZone = 0f;
     #endregion
 
     protected override void Update()
@@ -23,6 +24,15 @@ public class Stove : CookingStation
         {
             foodCooked = true;
             CookedStove();
+            FindObjectOfType<AudioManager>().Play("Ding");
+        }
+
+        if (hasZombie) {
+            timeInZone += Time.deltaTime;
+            if (timeInZone > 4f) {
+                DestroyFood();
+                timeInZone = 0f;
+            }
         }
     }
 
@@ -87,7 +97,6 @@ public class Stove : CookingStation
     #endregion
 
     #region Dish Functions
-
     //The player takes the dish and he can put the dish on the plate. The stove is replaced by the CookingStation.
     private void GrabFood(string dish)
     {
@@ -113,6 +122,16 @@ public class Stove : CookingStation
         cookedStove.foodCooked = true;
         cookedStove.ingredientName = ingredientName;
         Destroy(gameObject);
+    }
+
+    // Function called when zombie disrupts the cooking
+    // Spawns a regular CookingStation with no ingredient in it
+    private void DestroyFood()
+    {
+        grabbed = true;
+        GameObject originalStation = Instantiate(Resources.Load("CookingStation"), transform.position, transform.rotation) as GameObject;
+        Destroy(gameObject);
+        FindObjectOfType<AudioManager>().Play("ZombieAttack");
     }
     #endregion
 }

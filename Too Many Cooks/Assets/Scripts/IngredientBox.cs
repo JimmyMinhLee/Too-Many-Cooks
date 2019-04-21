@@ -60,9 +60,12 @@ public class IngredientBox : MonoBehaviour
             // press 'e' to open the box
             if (Input.GetButtonDown("Interact"))
             {
+                FindObjectOfType<AudioManager>().Play("BoxOpen");
+
                 // set the player's current object as the ingredient
                 GameObject ingredientClone = Instantiate(ingredient, player.GetComponent<PlayerInteract>().holdPoint);
-                ingredientClone.name = "ZombieLeg";
+                ingredientClone.name = ingredient.name;
+
                 player.GetComponent<PlayerInteract>().pressedEelsewhere = true;
                 player.GetComponent<PlayerInteract>().currObj = ingredientClone;
                 player.GetComponent<PlayerInteract>().grabbed = true;

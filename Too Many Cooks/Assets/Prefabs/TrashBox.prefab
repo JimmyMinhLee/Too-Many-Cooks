@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9184486912532374263}
   - component: {fileID: 9184486912532374260}
   - component: {fileID: 9184486912532374261}
-  - component: {fileID: 2605314102027457503}
+  - component: {fileID: 9076070574585717327}
   m_Layer: 10
   m_Name: TrashBox
   m_TagString: Box
@@ -146,7 +146,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 2.249485
---- !u!114 &2605314102027457503
+--- !u!114 &9076070574585717327
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

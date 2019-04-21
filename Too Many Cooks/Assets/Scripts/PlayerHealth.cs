@@ -8,14 +8,16 @@ public class PlayerHealth : MonoBehaviour
     #region healthVariables
     public float maxHealth;
     float currHealth;
-    public Slider hpSlider;
+    [SerializeField]
+    private Stat health;
     #endregion
 
 
     public void Awake()
     {
+        health.Initialize(maxHealth, maxHealth);
         currHealth = maxHealth;
-        hpSlider.value = currHealth / maxHealth;
+        health.MyCurrentValue = maxHealth;
     }
 
     // Update is called once per frame
@@ -34,7 +36,7 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage(float damage)
     {
         currHealth -= damage;
-        hpSlider.value = currHealth / maxHealth;
+        health.MyCurrentValue = currHealth;
     }
 
     private void Die() {

@@ -12,9 +12,11 @@ GameObject:
   - component: {fileID: 7141740657100232544}
   - component: {fileID: 488477146296336988}
   - component: {fileID: 7386598233028508626}
+  - component: {fileID: 8778889545146710238}
+  - component: {fileID: 6386144740896952658}
   m_Layer: 8
   m_Name: CookedZombieLeg
-  m_TagString: Uncookable
+  m_TagString: Ingredient
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 5673064021149706206}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.71, y: -11.8, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -68,7 +70,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1298313575
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 243f604c6f4bab445bdfe8f308ba0634, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -117,4 +119,33 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.25
+  m_Radius: 2.5
+--- !u!114 &6386144740896952658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5673064021149706206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c2b4f73b44a47c40b189a3f360be16c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextPlate: CookedZombieLegDish
+--- !u!114 &8778889545146710238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5673064021149706206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcaf384cca27f4a338929984309e1af0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cookTime: 0
+  isCuttable: 0
+  cooked: 1
+  ingredient: CookedZombieLeg

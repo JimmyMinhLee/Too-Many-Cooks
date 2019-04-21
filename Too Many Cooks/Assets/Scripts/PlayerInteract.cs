@@ -48,15 +48,16 @@ public class PlayerInteract : MonoBehaviour
         if (currObj) {
             ChangeHoldPoint(x, y);
         }
-        CheckInteract();
+        CheckInteract(x, y);
     }
     #endregion
 
 
     #region InteractFunctions
-    void CheckInteract() {
+    void CheckInteract(float x, float y) {
         // Check if the player is in the zone of an item and if the player clicks "E"/"Interact"
-        if (Input.GetButtonDown("Interact") && currObj && !pressedEelsewhere) {
+        if (Input.GetButtonDown("Interact") && currObj && !pressedEelsewhere)
+        {
             // Grabs the item and puts it in the player's hands
             if (!grabbed)
             {
@@ -69,22 +70,7 @@ public class PlayerInteract : MonoBehaviour
                 // Cast a ray in the direction of the key pressed 
                 // Check if the ray collides with a counter/cooking station/plate
                 // If it does, change its position to the position of that
-                if (Input.GetKey("a") || Input.GetKey("left"))
-                {
-                    hits = Physics2D.RaycastAll(holdPoint.position + Vector3.down, Vector2.left * transform.localScale.x, distance);
-                }
-                if (Input.GetKey("d") || Input.GetKey("right"))
-                {
-                    hits = Physics2D.RaycastAll(holdPoint.position + Vector3.down, Vector2.right * transform.localScale.x, distance);
-                }
-                if (Input.GetKey("w") || Input.GetKey("up"))
-                {
-                    hits = Physics2D.RaycastAll(holdPoint.position, Vector2.up * transform.localScale.x, distance);
-                }
-                if (Input.GetKey("s") || Input.GetKey("down"))
-                {
-                    hits = Physics2D.RaycastAll(holdPoint.position, Vector2.down * transform.localScale.x, 1f+ distance);
-                }
+                hits = CheckHits(x, y);
 
                 // Drop item on the counter if the ray hit a counter and there isn't already an item there
                 bool hitCounter = false;
@@ -99,7 +85,6 @@ public class PlayerInteract : MonoBehaviour
                             hitCounter = true;
                             hits = new RaycastHit2D[0];
                         }
-                        // || hit.collider.gameObject.tag == "Plate"
                         if (hit.collider != null && 
                             (hit.collider.gameObject.tag == "Ingredient" || hit.collider.gameObject.tag == "Dish" || hit.collider.gameObject.tag == "Uncookable") &&
                             hit.collider.gameObject.transform != currObj.transform) {
@@ -110,16 +95,16 @@ public class PlayerInteract : MonoBehaviour
 
 
                 // Drops the item
+                /* TODO: When you get a plate from plate box and drop it, it contiously does this */
                 if (!hitCounter) {
                     currObj.transform.position = holdPoint.position + Vector3.down;
-                } 
-                if (hitObj != null && !hitInteractable) {
+                } else if (hitObj != null && !hitInteractable) {
                     currObj.transform.position = hitObj.position;
                 }
 
                 grabbed = false;
                 currObj.GetComponent<SpriteRenderer>().sortingLayerName = "Ingredient";
-
+                //currObj.transform.parent = transform.root;
             }
         }
 
@@ -135,7 +120,7 @@ public class PlayerInteract : MonoBehaviour
         float compx = 1f * moveSpeed;
         float compy = 1f * moveSpeed;
 
-        if (grabbed && y == -compy)
+        if (grabbed && (y == -compy || y == 0))
         {
             currObj.GetComponent<SpriteRenderer>().sortingLayerName = "HeldIngredient";
         } else if (grabbed && y != -compy) {
@@ -175,24 +160,74 @@ public class PlayerInteract : MonoBehaviour
             holdPoint = downLeftHoldPoint;
         }
     }
+
+    RaycastHit2D[] CheckHits(float x, float y) {
+        float compx = 1f * moveSpeed;
+        float compy = 1f * moveSpeed;
+        RaycastHit2D[] hits = new RaycastHit2D[0];
+
+        // Player is facing right
+        if (x == compx && y == 0)
+        {
+            hits = Physics2D.RaycastAll(holdPoint.position + Vector3.down, Vector2.right * transform.localScale.x, distance);
+        }
+        // Player is facing left
+        if (x == -compx && y == 0)
+        {
+            hits = Physics2D.RaycastAll(holdPoint.position + Vector3.down, Vector2.left * transform.localScale.x, distance);
+        }
+        // Player is facing up
+        if (x == 0 && y == compy)
+        {
+            hits = Physics2D.RaycastAll(holdPoint.position, Vector2.up * transform.localScale.x, distance);
+        }
+        // Player is facing down
+        if (x == 0 && y == -compy)
+        {
+            hits = Physics2D.RaycastAll(holdPoint.position, Vector2.down * transform.localScale.x, 1f + distance);
+        }
+        // Player is facing up/right
+        if (x == compx && y == compy)
+        {
+            hits = Physics2D.RaycastAll(holdPoint.position, new Vector2(1, 1) * transform.localScale.x, distance);
+        }
+        // Player is facing up/left
+        if (x == -compx && y == compy)
+        {
+            hits = Physics2D.RaycastAll(holdPoint.position, new Vector2(-1, 1) * transform.localScale.x, distance);
+        }
+        // Player is facing down/right
+        if (x == compx && y == -compy)
+        {
+            hits = Physics2D.RaycastAll(holdPoint.position, new Vector2(1, -1) * transform.localScale.x, 1f + distance);
+        }
+        // Player is facing down/left
+        if (x == -compx && y == -compy)
+        {
+            hits = Physics2D.RaycastAll(holdPoint.position, new Vector2(-1, -1) * transform.localScale.x, 1f + distance);
+        }
+        return hits;
+    }
+
     #endregion
 
 
     #region TriggerFunctions
     void OnTriggerEnter2D(Collider2D obj) {
         // Enter collider of an ingredient
-        if (obj.CompareTag("Ingredient") && currObj == null) {
+        if (obj.CompareTag("Plate") && currObj == null)
+        {
             currObj = obj.gameObject;
         }
         if (obj.CompareTag("Dish") && currObj == null)
         {
             currObj = obj.gameObject;
         }
-        if (obj.CompareTag("Plate") && currObj == null)
+        if (obj.CompareTag("Uncookable") && currObj == null)
         {
             currObj = obj.gameObject;
         }
-        if (obj.CompareTag("Uncookable") && currObj == null)
+        if (obj.CompareTag("Ingredient") && currObj == null)
         {
             currObj = obj.gameObject;
         }
@@ -229,4 +264,11 @@ public class PlayerInteract : MonoBehaviour
         }
     }
     #endregion
+
+    public void TakeItem(GameObject objectToBeTaken)
+    {
+        currObj = Instantiate(objectToBeTaken);
+        grabbed = true; 
+
+    }
 }

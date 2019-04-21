@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
 
     #region SceneTransitions
     public void StartGame() {
-        SceneManager.LoadScene("MainScene");
+        SceneManager.LoadScene("TestScene");
     }
 
 

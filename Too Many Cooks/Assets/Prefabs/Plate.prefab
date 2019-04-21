@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 5145220405619083642}
   - component: {fileID: 5145220405619083397}
   - component: {fileID: 2111096514661898838}
+  - component: {fileID: 7762873399419615450}
+  - component: {fileID: 8531447173397598187}
   m_Layer: 0
   m_Name: Plate
   m_TagString: Plate
@@ -96,3 +98,44 @@ CircleCollider2D:
   m_Offset: {x: 0.00000011920929, y: 0.14999998}
   serializedVersion: 2
   m_Radius: 2.5
+--- !u!114 &7762873399419615450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5145220405619083396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af52c2d3b20891b44927f201317e2bdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasPlayer: 0
+  hasCooked: 0
+  cookedIngredient: 
+  playerObj: {fileID: 0}
+  cookedObj: {fileID: 0}
+  nextPlate: 
+  requiredIngredient: 
+  plateName: 
+--- !u!50 &8531447173397598187
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5145220405619083396}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4

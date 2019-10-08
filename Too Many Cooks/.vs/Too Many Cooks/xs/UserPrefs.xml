@@ -1,0 +1,38 @@
+﻿<Properties StartupConfiguration="{DFF34D98-62F6-7049-EE90-E460F6B65288}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/PlayerInteract.cs">
+    <Files>
+      <File FileName="Assets/Scripts/Cutting Scripts Trials/Clean Cutting Station Code.cs" Line="175" Column="1" />
+      <File FileName="Assets/Scripts/Cutting Scripts Trials/ScriptCopy.cs" />
+      <File FileName="Assets/Scripts/Cutting Scripts Trials/Script2.cs" />
+      <File FileName="Assets/Scripts/Cutting Scripts Trials/ThirdCopy.cs" />
+      <File FileName="Assets/Scripts/PlayerInteract.cs" Line="285" Column="1" />
+      <File FileName="Assets/Scripts/PlayerController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/PrototypeCuttingStation.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/PrototypeCuttingStation.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/BetterCuttingStation.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/LineOfSight.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/PlayerHealth.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Too Many Cooks" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Scripts" expanded="True">
+                <Node name="Cutting Scripts Trials" expanded="True" />
+                <Node name="PlayerInteract.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="08706287-b0d0-4966-9cfc-0fa168b38252" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

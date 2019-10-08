@@ -8,6 +8,7 @@ public class Plate : MonoBehaviour
     private bool hasPlayer;
     private bool hasCooked;
     private string cookedIngredient;
+    private bool cutted;
     #endregion
 
     //Get the GameObject of the player, ingredient, and the next object.
@@ -36,6 +37,7 @@ public class Plate : MonoBehaviour
             case "Ingredient":
                 cookedObj = collider.gameObject;
                 cookedIngredient = cookedObj.GetComponent<Ingredient>().ingredient;
+                cutted = !cookedObj.GetComponent<Ingredient>().isCuttable;
                 hasCooked = cookedObj.GetComponent<Ingredient>().cooked;
 
                 // Dalton changed
@@ -54,13 +56,13 @@ public class Plate : MonoBehaviour
     protected virtual void OnTriggerStay2D(Collider2D collider)
     {
         //The player can cook only when both he and the ingredient is in contact with the station.
-        if (hasCooked && hasPlayer && cookedObj != null)
+        if (hasCooked && hasPlayer && cookedObj != null && cutted)
         {
             //Press 'e' to cook the ingredient.
             if (Input.GetKey(KeyCode.E))
             {
                 Assemble();
-                //Debug.Log("Cooked");
+                Debug.Log("Assembled");
             }
         }
     }
@@ -109,14 +111,18 @@ public class Plate : MonoBehaviour
         if (string.Equals(requiredIngredient, cookedIngredient) && nextPlate != null && requiredIngredient != null)
         {
             Instantiate(Resources.Load(nextPlate), transform.position, transform.rotation);
-            Debug.Log("dish instantiated");
+            Debug.Log(nextPlate + "instantiated");
             PlayerInteract player = playerObj.GetComponent<PlayerInteract>();
             player.currObj = null;
             player.grabbed = false;
             player.pressedEelsewhere = false;
             Destroy(gameObject);
+
+            // Added due to change in PlayerInteract
+            GameObject.Find("Player").GetComponent<PlayerInteract>().currObjList.Remove(cookedObj);
             Destroy(cookedObj);
-        } else if ((cookedIngredient.Equals("CookedZombieLeg") || cookedIngredient.Equals("Bun")) && transform.name.Contains("Plate"))
+        }
+        else if ((cookedIngredient.Equals("CookedZombieLeg") || cookedIngredient.Equals("Bun")) && transform.name.Contains("Plate"))
         {
             Instantiate(Resources.Load(cookedIngredient + "Dish"), transform.position, transform.rotation);
             Debug.Log("dish instantiated");
@@ -125,6 +131,9 @@ public class Plate : MonoBehaviour
             player.grabbed = false;
             player.pressedEelsewhere = false;
             Destroy(gameObject);
+
+            // Added due to change in PlayerInteract
+            GameObject.Find("Player").GetComponent<PlayerInteract>().currObjList.Remove(cookedObj);
             Destroy(cookedObj);
         }
 

@@ -27,9 +27,17 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("TestScene");
     }
 
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 
     public void LoseGame() {
         SceneManager.LoadScene("DieScene");
+    }
+
+    public void WinGame() {
+        SceneManager.LoadScene("WinGame");
     }
     #endregion
 }

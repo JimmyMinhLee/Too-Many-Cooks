@@ -16,15 +16,21 @@ public class PlayerController : MonoBehaviour
     public bool isSprinting = false;
     public float maxSprint = 20f;
     public float sprintGauge = 20f;
+    [SerializeField]
+    private Stat sprint;
 
     #endregion
 
     void Start()
     {
+        Debug.Log("Player tag: " + gameObject.tag); 
         playerRigidBody = GetComponent<Rigidbody2D>();
         playerAnim = GetComponent<Animator>();
         playerAnim.SetBool("IsMoving", false);
         playerAnim.SetFloat("YDirection", -1);
+
+        sprint.Initialize(maxSprint, maxSprint);
+        sprint.MyCurrentValue = maxSprint;
     }
 
     // Update is called once per frame
@@ -45,6 +51,7 @@ public class PlayerController : MonoBehaviour
                 // Call PlayerMove - passing in our inputs 
                 PlayerMove(Input.GetAxisRaw("Horizontal") * 2 * moveSpeed, Input.GetAxisRaw("Vertical") * 2 * moveSpeed);
                 sprintGauge -= Time.deltaTime * 5f;
+                sprint.MyCurrentValue = sprintGauge;
 
                 if (sprintGauge < 0f)
                 {
@@ -59,6 +66,7 @@ public class PlayerController : MonoBehaviour
                     if (sprintGauge < maxSprint)
                     {
                         sprintGauge += Time.deltaTime * 1f;
+                        sprint.MyCurrentValue = sprintGauge;
                     }
                 }
 
@@ -79,6 +87,7 @@ public class PlayerController : MonoBehaviour
             if (sprintGauge < maxSprint)
             {
                 sprintGauge += Time.deltaTime * 1f;
+                sprint.MyCurrentValue = sprintGauge;
             }
 
         }
@@ -103,6 +112,8 @@ public class PlayerController : MonoBehaviour
 
         // Otherwise, it's going to be just 0, 0
         playerRigidBody.velocity = new Vector2(x, y);
+
+        // change hold point
     }
 
     void checkSprint()

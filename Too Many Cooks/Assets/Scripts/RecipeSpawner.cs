@@ -68,20 +68,18 @@ public class RecipeSpawner : MonoBehaviour
             }
 
             // pick a random time within the range to spawn the next recipe
-            float randomTime = Random.Range(20f, 25f);
+            float randomTime = Random.Range(15f, 20f);
             yield return new WaitForSeconds(randomTime);
         }
     }
 
     public void DeleteRecipe(int slot) {
         Destroy(slotToRecipe[slot]);
-        /* TODO: DO I NEED THIS HERE? */
         slotToRecipe[slot] = null;
     }
 
     public int GetSlot(string name) {
         for(int i = 0; i < slotToRecipe.Count; i++) { 
-            /* TODO: DO I NEED THIS HERE? */
             if (slotToRecipe[i] != null) {
                 if (slotToRecipe[i].GetComponent<Image>().sprite.name == name)
                 {
@@ -92,11 +90,7 @@ public class RecipeSpawner : MonoBehaviour
         return 0;
     }
 
-    /* TODO: MAKE THIS WORK */
-    /*
-        currSlot = the slot we want to write to
-        i = the slot we want to read data from      
-    */
+
     public void MoveSlotsOver(int deletedSlot) {
         int currSlot = deletedSlot;
         for (int i = deletedSlot + 1; i < slotToRecipe.Count; i++)

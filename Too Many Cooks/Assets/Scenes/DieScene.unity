@@ -440,7 +440,7 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: 92c9db69143e9448bb7d722a1c8dba3d, type: 3}
     m_FontSize: 27
     m_FontStyle: 1
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 2
     m_MaxSize: 82
     m_Alignment: 4
@@ -449,10 +449,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Play Again
-
-
-'
+  m_Text: MAIN MENU
 --- !u!222 &970786311
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -517,7 +514,7 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Music
     group: SFX
-    clip: {fileID: 8300000, guid: c95473699987e4ff5adef202600bb83c, type: 3}
+    clip: {fileID: 8300000, guid: 1eaefcd2bccf94869befca8cab68419a, type: 3}
     source: {fileID: 0}
   musicGroup: {fileID: 0}
   sfxGroup: {fileID: 0}
@@ -697,7 +694,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1532195896}
-        m_MethodName: StartGame
+        m_MethodName: LoadMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

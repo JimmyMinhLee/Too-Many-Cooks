@@ -14,7 +14,6 @@ public class BetterCuttingStation : MonoBehaviour
     public Animator playerAnim;
     public PlayerInteract playerInteract;
     public bool hasPlayer = false;
-
     public GameObject playerItem;
 
 
@@ -30,40 +29,31 @@ public class BetterCuttingStation : MonoBehaviour
 
     void Update()
     {
-        // Check if the player wants to interact with the object on the cutting board
-        //if (hasPlayer && Input.GetButtonDown("Interact") && objectBeingCut != null) {
-        //    // Set the player's holding variables
-        //    playerInteract.currObj = objectBeingCut;
-        //    playerInteract.grabbed = true;
-        //    playerInteract.pressedEelsewhere = true;
 
-        //    // Reset the cutting board variables
-        //    objectBeingCut = null;
-        //    cutScript = null;
-            
-        //    return;
-        //}
+        if (hasPlayer && Input.GetButtonDown("Interact")) { 
 
-        // Check if the player wants to place an ingredient on the cutting board
-        if (hasPlayer && Input.GetButtonDown("Interact") && objectBeingCut == null)
-        {
-            //if (objectBeingCut != null && playerInteract.currObj == null)
-            //{
-            //    playerInteract.currObj = objectBeingCut;
-            //    playerInteract.grabbed = true;
-            //    objectBeingCut = null;
-            //}
-
-            if (playerInteract.currObj.CompareTag("Ingredient"))
+            if (objectBeingCut != null && playerInteract.grabbed == false)
             {
-                if (playerInteract.currObj.GetComponent<Ingredient>().isCuttable)
+                Debug.Log("Entered this loop.");
+                Destroy(objectBeingCut);
+                this.objectBeingCut = null;
+                this.cutScript = null; 
+            }
+
+            if (objectBeingCut == null && playerInteract.grabbed == true)
+            {
+                Debug.Log("Entered this one!"); 
+                if (playerInteract.currObj.CompareTag("Ingredient"))
                 {
-                    PlaceItem(); 
+                    if (playerInteract.currObj.GetComponent<Ingredient>().isCuttable)
+                    {
+                        PlaceItem();
+                    }
                 }
             }
+
         }
 
-        // Check if the player wants to cut the current ingredient on the cutting board
         if (hasPlayer && objectBeingCut != null && cutTiming > 0)
         {
             if (Input.GetKey("j"))
@@ -73,7 +63,8 @@ public class BetterCuttingStation : MonoBehaviour
 
             else if (!Input.GetKey("j"))
             {
-                playerAnim.SetBool("Cutting", false); 
+                playerAnim.SetBool("Cutting", false);
+                GameObject.Find("Player").GetComponent<PlayerInteract>().isCutting = false;
             }
         }
 
@@ -108,15 +99,15 @@ public class BetterCuttingStation : MonoBehaviour
 
     private void PlaceItem()
     {
-        if (playerInteract.currObj != null && playerInteract.currObj.CompareTag("Ingredient"))
+        if (playerInteract.currObj.CompareTag("Ingredient"))
         {
             if  (playerInteract.currObj.GetComponent<Ingredient>().isCuttable)
             {
-                objectBeingCut = playerInteract.currObj.gameObject;
-                objectBeingCut.transform.position = stationPosition;
-                cutScript = objectBeingCut.GetComponent<CuttableIngredient>();
-                playerInteract.grabbed = false; 
-                playerInteract.currObj = null; 
+                GameObject temp = Instantiate(playerInteract.currObj, stationPosition, new Quaternion(0f, 0f, 0f, 0f), this.transform);
+                Destroy(playerInteract.currObj);
+                objectBeingCut = temp;
+                cutScript = temp.GetComponent<CuttableIngredient>();
+                playerInteract.grabbed = false;
             }
         }
     }
@@ -124,8 +115,11 @@ public class BetterCuttingStation : MonoBehaviour
     private void Cut()
     {
         playerAnim.SetBool("Cutting", true);
-        cutTiming -= 1; 
+        cutTiming -= 1;
 
+        // set the PlayerInteract variable cutTiming
+        GameObject.Find("Player").GetComponent<PlayerInteract>().isCutting = true;
+        GameObject.Find("Player").GetComponent<PlayerInteract>().cutTiming = cutTiming;
     }
 
     private void Reset()
@@ -137,5 +131,7 @@ public class BetterCuttingStation : MonoBehaviour
         objectBeingCut = null;
         cutTiming = 100f;
 
+        GameObject.Find("Player").GetComponent<PlayerInteract>().isCutting = false;
+        GameObject.Find("Player").GetComponent<PlayerInteract>().cut.MyCurrentValue = 100f;
     }
 }

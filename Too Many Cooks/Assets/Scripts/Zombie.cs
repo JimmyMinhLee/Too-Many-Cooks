@@ -45,6 +45,7 @@ public class Zombie : MonoBehaviour
     #region zombieTypes
     public bool isMessyZombie;
     public bool isStrongZombie;
+    public bool isTutorial;
     #endregion
 
 
@@ -213,6 +214,8 @@ public class Zombie : MonoBehaviour
         currHealth -= damage;
         //Debug.Log(currHealth);
         health.MyCurrentValue = currHealth;
+
+        FindObjectOfType<AudioManager>().Play("ZombieHurt");
     }
 
     protected void Die() {
@@ -228,7 +231,11 @@ public class Zombie : MonoBehaviour
 
             // 0.80 chance of dropping an ingredient
             int coinFlip = Random.Range(0, 5);
-            if (coinFlip <= 3) {
+            if (isTutorial) {
+                coinFlip = 1;
+            }
+
+            if (true) {
                 GameObject droppedObj = Instantiate(ingredientList[i], this.transform.position, Quaternion.identity);
                 Debug.Log("DROPPED INGREDIENT: " + ingredientList[i].name);
                 droppedObj.name = ingredientList[i].name;

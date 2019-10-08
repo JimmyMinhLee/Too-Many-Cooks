@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6283695194484198759}
   - component: {fileID: 3070761985317930525}
   - component: {fileID: 1464342248}
+  - component: {fileID: 6612594288508687452}
   m_Layer: 10
   m_Name: Cooking Station
   m_TagString: CookingStation
@@ -131,3 +132,29 @@ CircleCollider2D:
   m_Offset: {x: 0, y: -0.51948476}
   serializedVersion: 2
   m_Radius: 2.2494848
+--- !u!61 &6612594288508687452
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6283695194484198757}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.012414455, y: -0.39628482}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 3.36, y: 4.72}
+    newSize: {x: 0.16, y: 0.16}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.987568, y: 2.98003}
+  m_EdgeRadius: 0

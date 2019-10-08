@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 765985176458014246}
   - component: {fileID: 612315984032323096}
   - component: {fileID: 830676666828988595}
-  - component: {fileID: 830676666828988598}
   - component: {fileID: 1378766558959247540}
   m_Layer: 0
   m_Name: CuttingBoard
@@ -101,27 +100,6 @@ CircleCollider2D:
   m_Offset: {x: 0.0000020986183, y: -0.71855044}
   serializedVersion: 2
   m_Radius: 3.8173625
---- !u!114 &830676666828988598
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 830676666828988605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e2154960c9bfb44799c299c894832c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stationPosition: {x: 0, y: 0, z: 0}
-  cutTiming: 100
-  objectBeingCut: {fileID: 0}
-  cutScript: {fileID: 0}
-  player: {fileID: 0}
-  playerAnim: {fileID: 0}
-  playerInteract: {fileID: 0}
-  hasPlayer: 0
-  playerItem: {fileID: 0}
 --- !u!61 &1378766558959247540
 BoxCollider2D:
   m_ObjectHideFlags: 0

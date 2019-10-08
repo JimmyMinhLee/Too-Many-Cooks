@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class PlayerInteract : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class PlayerInteract : MonoBehaviour
     RaycastHit2D[] hits = new RaycastHit2D[0];
     public float distance = 3f;
     public bool pressedEelsewhere;
+
+    private string[] validObjTags = { "Plate", "Dish", "Uncookable", "Ingredient" };
+    //public GameObject[] currObjList;
+    public Dictionary<GameObject, float> currObjList;
     #endregion
 
 
@@ -32,32 +37,89 @@ public class PlayerInteract : MonoBehaviour
     #endregion
 
 
+    #region CutVariables
+    public float cutTiming;
+    public bool isCutting = false;
+    public bool nearCuttingBoard = false;
+    public bool canGrabOffBoard = false; 
+    [SerializeField]
+    public Stat cut;
+    [SerializeField]
+    public CanvasGroup cutGroup;
+    #endregion
+
+
+
     #region InitialFunctions
     void Start()
     {
         playerAnim = GetComponent<Animator>();
         moveSpeed = GameObject.Find("Player").GetComponent<PlayerController>().moveSpeed;
         holdPoint = downHoldPoint;
+
+        // variables used to show cutting bar
+        cut.Initialize(100f, 100f);
+        cut.MyCurrentValue = 100f;
+        cutGroup.alpha = 0;
+
+        currObjList = new Dictionary<GameObject, float>();
     }
 
 
     void Update() {
+        /* TODO: Find the closest object in your list and set it as currObj */
+        float minDist = int.MaxValue;
+        GameObject localCurrObj = null;
+
+        if (currObjList.Count != 0 && grabbed == false) {
+            foreach (GameObject obj in currObjList.Keys) {
+                if (obj != null) {
+                    float currDist = Vector3.Distance(holdPoint.position, obj.transform.position);
+                    if (currDist < minDist)
+                    {
+                        localCurrObj = obj;
+                        currObj = obj;
+                        minDist = currDist;
+                    }
+                }
+            }
+        }
+
+
         float x = playerAnim.GetFloat("XDirection");
         float y = playerAnim.GetFloat("YDirection");
 
         if (currObj) {
             ChangeHoldPoint(x, y);
         }
+
         CheckInteract(x, y);
+
+        // used to update cutting bar
+        if (isCutting) {
+            cutGroup.alpha = 1;
+            cut.MyCurrentValue = cutTiming;
+        } else {
+            cutGroup.alpha = 0;
+        }
+
+        /* For debugging */
+        //string stringBuilder = "";
+        //foreach (GameObject obj in currObjList.Keys) {
+        //    stringBuilder += obj.name;
+        //}
+        //Debug.Log(stringBuilder);
     }
     #endregion
 
 
     #region InteractFunctions
     void CheckInteract(float x, float y) {
+
         // Check if the player is in the zone of an item and if the player clicks "E"/"Interact"
-        if (Input.GetButtonDown("Interact") && currObj && !pressedEelsewhere)
+        if (Input.GetButtonDown("Interact") && currObj && !pressedEelsewhere && (canGrabOffBoard || !nearCuttingBoard))
         {
+            canGrabOffBoard = false;
             // Grabs the item and puts it in the player's hands
             if (!grabbed)
             {
@@ -118,45 +180,57 @@ public class PlayerInteract : MonoBehaviour
 
     void ChangeHoldPoint(float x, float y) {
         float compx = 1f * moveSpeed;
+        float sprintCompx = 2f * moveSpeed;
         float compy = 1f * moveSpeed;
+        float sprintCompy = 2f * moveSpeed;
 
-        if (grabbed && (y == -compy || y == 0))
+        if (grabbed && (y == -compy || y == 0 || y == -sprintCompy))
         {
             currObj.GetComponent<SpriteRenderer>().sortingLayerName = "HeldIngredient";
-        } else if (grabbed && y != -compy) {
+        }
+        else if (grabbed && (y != -compy || y != -sprintCompy))
+        {
             currObj.GetComponent<SpriteRenderer>().sortingLayerName = "Ingredient";
         }
 
         // Player is facing right
-        if (x == compx && y == 0) {
+        if ((x == compx || x == sprintCompx) && y == 0)
+        {
             holdPoint = rightHoldPoint;
         }
         // Player is facing left
-        if (x == -compx && y == 0) {
+        if ((x == -compx || x == -sprintCompx) && y == 0)
+        {
             holdPoint = leftHoldPoint;
         }
         // Player is facing up
-        if (x == 0 && y == compy) {
+        if (x == 0 && (y == compy || y == sprintCompy))
+        {
             holdPoint = upHoldPoint;
         }
         // Player is facing down
-        if (x == 0 && y == -compy) {
+        if (x == 0 && (y == -compy || y == -sprintCompy))
+        {
             holdPoint = downHoldPoint;
         }
         // Player is facing up/right
-        if (x == compx && y == compy) {
+        if ((x == compx && y == compy) || (x == sprintCompx && y == sprintCompy))
+        {
             holdPoint = upRightHoldPoint;
         }
         // Player is facing up/left
-        if (x == -compx && y == compy) {
+        if ((x == -compx && y == compy) || (x == -sprintCompx && y == sprintCompy))
+        {
             holdPoint = upLeftHoldPoint;
         }
         // Player is facing down/right
-        if (x == compx && y == -compy) {
+        if ((x == compx && y == -compy) || (x == sprintCompx && y == -sprintCompy))
+        {
             holdPoint = downRightHoldPoint;
         }
         // Player is facing down/left
-        if (x == -compx && y == -compy) {
+        if ((x == -compx && y == -compy) || (x == -sprintCompx && y == -sprintCompy))
+        {
             holdPoint = downLeftHoldPoint;
         }
     }
@@ -213,52 +287,85 @@ public class PlayerInteract : MonoBehaviour
 
 
     #region TriggerFunctions
+    /* TODO: Option 2: Keep track of a list of objects and then 
+     * when you want to pick up an object pick up the closest one*/
     void OnTriggerEnter2D(Collider2D obj) {
-        // Enter collider of an ingredient
-        if (obj.CompareTag("Plate") && currObj == null)
+        //// Enter collider of an ingredient
+        //if (obj.CompareTag("Plate") && currObj == null)
+        //{
+        //    currObj = obj.gameObject;
+        //}
+        //if (obj.CompareTag("Dish") && currObj == null)
+        //{
+        //    currObj = obj.gameObject;
+        //}
+        //if (obj.CompareTag("Uncookable") && currObj == null)
+        //{
+        //    currObj = obj.gameObject;
+        //}
+        //if (obj.CompareTag("Ingredient") && currObj == null)
+        //{
+        //    currObj = obj.gameObject;
+        //}
+
+        //if (validObjTags.Contains(obj.tag) && currObj == null)
+        if (validObjTags.Contains(obj.tag))
         {
-            currObj = obj.gameObject;
-        }
-        if (obj.CompareTag("Dish") && currObj == null)
-        {
-            currObj = obj.gameObject;
-        }
-        if (obj.CompareTag("Uncookable") && currObj == null)
-        {
-            currObj = obj.gameObject;
-        }
-        if (obj.CompareTag("Ingredient") && currObj == null)
-        {
-            currObj = obj.gameObject;
+            //currObj = obj.gameObject;
+
+            /* TODO: Add it to a dictionary instead */
+            currObjList.Add(obj.gameObject, 1);
+            Debug.Log("Added: " + obj.name);
         }
     }
 
 
     void OnTriggerExit2D(Collider2D obj) {
         // Exit collider of an ingredient
-        if (obj.CompareTag("Ingredient")) {
-            if (obj.gameObject == currObj) {
-                currObj = null;
-            }
-        }
-        if (obj.CompareTag("Dish"))
+        //if (obj.CompareTag("Ingredient")) {
+        //    if (obj.gameObject == currObj) {
+        //        currObj = null;
+        //    }
+        //}
+        //if (obj.CompareTag("Dish"))
+        //{
+        //    if (obj.gameObject == currObj)
+        //    {
+        //        currObj = null;
+        //    }
+        //}
+        //if (obj.CompareTag("Plate"))
+        //{
+        //    if (obj.gameObject == currObj)
+        //    {
+        //        currObj = null;
+        //    }
+        //}
+        //if (obj.CompareTag("Uncookable"))
+        //{
+        //    if (obj.gameObject == currObj)
+        //    {
+        //        currObj = null;
+        //    }
+        //}
+
+        //if (validObjTags.Contains(obj.tag) && obj.gameObject == currObj)
+        if (validObjTags.Contains(obj.tag))
         {
-            if (obj.gameObject == currObj)
-            {
-                currObj = null;
+            //currObj = null;
+
+            /* TODO: Remove it from the dictionary instead */
+            currObjList.Remove(obj.gameObject);
+            Debug.Log("Removed: " + obj.name);
+
+            bool flag = true;
+            foreach(GameObject k in currObjList.Keys) {
+                if (k != null) {
+                    flag = false;
+                }
             }
-        }
-        if (obj.CompareTag("Plate"))
-        {
-            if (obj.gameObject == currObj)
-            {
-                currObj = null;
-            }
-        }
-        if (obj.CompareTag("Uncookable"))
-        {
-            if (obj.gameObject == currObj)
-            {
+
+            if (currObjList.Count == 0 || flag) {
                 currObj = null;
             }
         }

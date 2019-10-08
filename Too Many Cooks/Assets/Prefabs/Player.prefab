@@ -1024,11 +1024,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7471404230047816634}
+  - component: {fileID: 7471404230047816625}
   - component: {fileID: 7471404230047816637}
   - component: {fileID: 7471404230047816636}
   - component: {fileID: 7471404230047816639}
   - component: {fileID: 7471404230047816638}
-  - component: {fileID: 7471404230047816625}
   - component: {fileID: 705542324297852112}
   - component: {fileID: 7471404230047816624}
   - component: {fileID: 408830224884689857}
@@ -1059,6 +1059,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7471404230047816625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7471404230047816627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd20fd1d457734e6b94ccefb72ed67db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currObj: {fileID: 0}
+  distance: 2
+  pressedEelsewhere: 0
+  grabbed: 0
+  holdPoint: {fileID: 0}
+  rightHoldPoint: {fileID: 7471404229741532660}
+  leftHoldPoint: {fileID: 7471404229342225807}
+  upHoldPoint: {fileID: 7471404228961192160}
+  downHoldPoint: {fileID: 7471404230232344409}
+  upRightHoldPoint: {fileID: 7471404229169260221}
+  upLeftHoldPoint: {fileID: 7471404230175747441}
+  downRightHoldPoint: {fileID: 7471404230268946858}
+  downLeftHoldPoint: {fileID: 7471404230420313775}
+  moveSpeed: 0
+  cutTiming: 0
+  isCutting: 0
+  cut: {fileID: 0}
+  cutGroup: {fileID: 0}
 --- !u!212 &7471404230047816637
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1168,32 +1198,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   currDirection: {x: 0, y: 0}
---- !u!114 &7471404230047816625
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7471404230047816627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd20fd1d457734e6b94ccefb72ed67db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currObj: {fileID: 0}
-  distance: 2
-  pressedEelsewhere: 0
-  grabbed: 0
-  holdPoint: {fileID: 0}
-  rightHoldPoint: {fileID: 7471404229741532660}
-  leftHoldPoint: {fileID: 7471404229342225807}
-  upHoldPoint: {fileID: 7471404228961192160}
-  downHoldPoint: {fileID: 7471404230232344409}
-  upRightHoldPoint: {fileID: 7471404229169260221}
-  upLeftHoldPoint: {fileID: 7471404230175747441}
-  downRightHoldPoint: {fileID: 7471404230268946858}
-  downLeftHoldPoint: {fileID: 7471404230420313775}
-  moveSpeed: 0
+  isSprinting: 0
+  maxSprint: 20
+  sprintGauge: 20
+  sprint: {fileID: 0}
 --- !u!114 &705542324297852112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1239,6 +1247,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27fc6d097d2436d4096d765785f15a84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 0
+  attackSpeed: 0
   playerObject: {fileID: 0}
 --- !u!1 &7471404230175747440
 GameObject:

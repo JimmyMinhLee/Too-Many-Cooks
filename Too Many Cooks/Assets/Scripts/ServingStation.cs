@@ -7,6 +7,7 @@ public class ServingStation : MonoBehaviour
     #region PlayerVars
     public GameObject player;
     public bool hasPlayer;
+    public bool isTutorial;
     #endregion
 
     #region DishVars
@@ -63,51 +64,83 @@ public class ServingStation : MonoBehaviour
         //The player can only throw away an ingredient if he is in range and is holding an ingredient
         if (hasPlayer && hasDish && player.GetComponent<PlayerInteract>().grabbed)
         {
-            // How much money the player gets for this dish
-            int tip = 0;
-            bool cont = false;
-            string currRecipe = null;
-            RecipeSpawner recipeSpawner = GameObject.Find("RecipeSpawnManager").GetComponent<RecipeSpawner>();
-
-            if (dish.name.Contains("BunZombieBrainCheeseTomatoLettuceDish") && 
-                recipeSpawner.numOfCurrRecipes["zombie_burger_card"] > 0) {
-                cont = true;
-                tip = 30;
-                currRecipe = "zombie_burger_card";
-            } else if (dish.name.Contains("CookedZombieLegDish") &&
-                recipeSpawner.numOfCurrRecipes["zombie_leg_card"] > 0) {
-                cont = true;
-                tip = 5;
-                currRecipe = "zombie_leg_card";
-            }
-
-            //Press 'e' to open the box
-            if (Input.GetButtonDown("Interact") && cont)
+            if (isTutorial)
             {
-                /* TODO: Destroy the recipe card that you serve */
-                // need to change the 3 to the first slot of the ingredient we put in
-                int currSlot = recipeSpawner.GetSlot(currRecipe);
-                recipeSpawner.DeleteRecipe(currSlot);
-                recipeSpawner.currRecipeSlot -= 1;
-                recipeSpawner.numOfCurrRecipes[currRecipe] -= 1;
-                /* TODO: Move all the other slots over */
-                recipeSpawner.MoveSlotsOver(currSlot);
+                if (Input.GetButtonDown("Interact") && dish.name.Contains("BunZombieBrainCheeseTomatoLettuceDish"))
+                {
+                    // Destroy burger
+                    FindObjectOfType<AudioManager>().Play("Ding");
 
-                FindObjectOfType<AudioManager>().Play("Ding");
-                // destroy the ingredient
-                Destroy(dish);
-                hasDish = false;
-                dish = null;
+                    // Maybe needed?
+                    GameObject.Find("Player").GetComponent<PlayerInteract>().currObjList.Remove(dish);
 
-                // destroy ingredient variables for player
-                player.GetComponent<PlayerInteract>().currObj = null;
-                player.GetComponent<PlayerInteract>().grabbed = false;
+                    // destroy the ingredient
+                    Destroy(dish);
+                    hasDish = false;
+                    dish = null;
 
-                // accumulate points for player
-                GameObject.Find("ScoreManager").GetComponent<ScoreManager>().updateDishesServed(1);
-                GameObject.Find("ScoreManager").GetComponent<ScoreManager>().accumulateTips(tip);
+                    // destroy ingredient variables for player
+                    player.GetComponent<PlayerInteract>().currObj = null;
+                    player.GetComponent<PlayerInteract>().grabbed = false;
+
+                    // Proceed to next main scene
+                    GameObject gm = GameObject.FindWithTag("GameController");
+                    gm.GetComponent<GameManager>().StartGame();
+                }
+            } else {
+                // How much money the player gets for this dish
+                int tip = 0;
+                bool cont = false;
+                string currRecipe = null;
+                RecipeSpawner recipeSpawner = GameObject.Find("RecipeSpawnManager").GetComponent<RecipeSpawner>();
+
+                if (dish.name.Contains("BunZombieBrainCheeseTomatoLettuceDish") &&
+                    recipeSpawner.numOfCurrRecipes["zombie_burger_card"] > 0)
+                {
+                    cont = true;
+                    tip = 30;
+                    currRecipe = "zombie_burger_card";
+                }
+                else if (dish.name.Contains("CookedZombieLegDish") &&
+                  recipeSpawner.numOfCurrRecipes["zombie_leg_card"] > 0)
+                {
+                    cont = true;
+                    tip = 5;
+                    currRecipe = "zombie_leg_card";
+                }
+
+                //Press 'e' to open the box
+                if (Input.GetButtonDown("Interact") && cont)
+                {
+                    /* TODO: Destroy the recipe card that you serve */
+                    // need to change the 3 to the first slot of the ingredient we put in
+                    int currSlot = recipeSpawner.GetSlot(currRecipe);
+                    recipeSpawner.DeleteRecipe(currSlot);
+                    recipeSpawner.currRecipeSlot -= 1;
+                    recipeSpawner.numOfCurrRecipes[currRecipe] -= 1;
+                    /* TODO: Move all the other slots over */
+                    recipeSpawner.MoveSlotsOver(currSlot);
+
+                    FindObjectOfType<AudioManager>().Play("Ding");
+
+                    // Maybe needed?
+                    GameObject.Find("Player").GetComponent<PlayerInteract>().currObjList.Remove(dish);
+
+                    // destroy the ingredient
+                    Destroy(dish);
+                    hasDish = false;
+                    dish = null;
+
+                    // destroy ingredient variables for player
+                    player.GetComponent<PlayerInteract>().currObj = null;
+                    player.GetComponent<PlayerInteract>().grabbed = false;
+
+                    // accumulate points for player
+                    GameObject.Find("ScoreManager").GetComponent<ScoreManager>().updateDishesServed(1);
+                    GameObject.Find("ScoreManager").GetComponent<ScoreManager>().accumulateTips(tip);
+                }
+                /*TODO: Have a box opening animation and ingredient being thrown away animation?*/
             }
-            /*TODO: Have a box opening animation and ingredient being thrown away animation?*/
         }
     }
 }

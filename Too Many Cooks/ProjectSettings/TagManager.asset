@@ -15,6 +15,7 @@ TagManager:
   - CookingStation
   - CookingStationWithIngredient
   - MessyZombie
+  - Cutting Bar
   layers:
   - Default
   - TransparentFX

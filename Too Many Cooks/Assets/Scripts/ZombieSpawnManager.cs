@@ -34,8 +34,8 @@ public class ZombieSpawnManager : MonoBehaviour
     void Start()
     {
         rnd = new System.Random();
-        maxNumOfZombies = 5;
-        currNumOfZombies = 0;
+        maxNumOfZombies = 6;
+        //currNumOfZombies = 0;
 
         leftX = bottomLeft.position[0];
         rightX = topRight.position[0];
@@ -109,7 +109,7 @@ public class ZombieSpawnManager : MonoBehaviour
                 currNumOfZombies += 1;
             }
             // pick a random time within the range to spawn the next zombie
-            float randomTime = Random.Range(15f, 20f);
+            float randomTime = Random.Range(7f, 15f);
             yield return new WaitForSeconds(randomTime);
         }
     }

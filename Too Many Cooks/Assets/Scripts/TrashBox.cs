@@ -79,6 +79,9 @@ public class TrashBox : MonoBehaviour
             //Press 'e' to open the box
             if (Input.GetButtonDown("Interact"))
             {
+                // Maybe needed?
+                GameObject.Find("Player").GetComponent<PlayerInteract>().currObjList.Remove(ingredient);
+
                 // destroy the ingredient
                 Destroy(ingredient);
                 hasThrowawayAble = false;
